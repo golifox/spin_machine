@@ -1,11 +1,18 @@
 import random
-from tabnanny import check
 
 
+# import all constants from file
 from config import *
 
 
 def check_winnings(columns, lines, bet, values):
+    """
+    Function that find the same values in a row in random matrix
+    and return how much money user wins, and list on winning lines
+    Example return: 100, [1,2]
+
+    """
+
     winnings = 0
     winning_lines = []
     for line in range(lines):
@@ -22,6 +29,11 @@ def check_winnings(columns, lines, bet, values):
 
 
 def get_slot_machine_spin(rows, cols, symbols):
+    """
+    Function that generate random matrix of spin
+    and return matrix like list.
+    
+    """
     all_symbols = []
     for symbol, symbol_count in symbols.items():
         for _ in range(symbol_count):
@@ -42,6 +54,10 @@ def get_slot_machine_spin(rows, cols, symbols):
 
 
 def print_slot_machine(columns):
+    """
+    Function for representation spin matrix.
+
+    """
     for row in range(len(columns[0])):
         for i, column in enumerate(columns):
             if i != len(columns) - 1:
@@ -51,6 +67,10 @@ def print_slot_machine(columns):
 
 
 def deposit():
+    """
+    Function to take input first user deposit. 
+
+    """
     while True: 
         amount = input("What do you like to deposit? $")
         if amount.isdigit():
@@ -66,6 +86,10 @@ def deposit():
 
 
 def get_number_of_lines():
+    """
+    Function to take user input how much lines he predict to win.
+
+    """
     while True: 
         lines = input(f"Enter the number of lines to bet on (1-{str(MAX_LINES)})? ")
         if lines.isdigit():
@@ -81,6 +105,10 @@ def get_number_of_lines():
 
 
 def get_bet():
+    """
+    Function to get user input bet in $.
+    
+    """
     while True: 
         amount = input(f"Amount must be between ${MIN_BET} - ${MAX_BET}: ")
         if amount.isdigit():
@@ -95,7 +123,11 @@ def get_bet():
     return amount
 
 
-def spin():
+def spin(balance):
+    """
+    A main loop of the game.
+    
+    """
     lines = get_number_of_lines()
     while True:
         bet = get_bet()
@@ -113,21 +145,25 @@ def spin():
     slots = get_slot_machine_spin(ROWS, COLS, SYMBOLS)
 
     print_slot_machine(slots)
-    winnigs, winning_lines = check_winnings(slots, lines, bet, SYMBOL_VALUE)
-    print(f"You won ${winnigs}.")
+    winnings, winning_lines = check_winnings(slots, lines, bet, SYMBOL_VALUE)
+    print(f"You won ${winnings}.")
     print(f"You won on lines:", *winning_lines)
 
-    return winning_lines - total_bet
+    return winnings - total_bet
 
 
 def main():
+    """
+    Main entry point.
+    
+    """
     balance = deposit()
     while True:
         print(f"Current balance is ${balance}")
-        spin = input("Press enter to spin (q to exit)")
-        if spin == "q":
+        answer = input("Press enter to spin (q to exit)")
+        if answer == "q":
             break
-        balance += spin()
+        balance += spin(balance)
 
     print(f"You left with ${balance}")
 
